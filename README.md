@@ -31,7 +31,7 @@ what a sensible range is.
 ## How to replace sound effects
 
 Just Bubbles **synthesises** its pop sounds on the fly using the Web
-Audio API (see `js/audio.js`) — there are no audio files to manage, and
+Audio API (see `js/audio.js`). There are no audio files to manage, and
 every pop can have subtle natural variation for free.
 
 If you'd rather use your own recorded sounds:
@@ -50,7 +50,7 @@ If you'd rather use your own recorded sounds:
    }
    audio.play();
    ```
-3. Everything else — the controls panel, volume, mute, pitch variation —
+3. Everything else (the controls panel, volume, mute, pitch variation)
    keeps working exactly the same, since only `playPop()` needed to change.
 
 To add a brand new *style* (beyond Classic / Soft / Playful) to the
@@ -62,7 +62,7 @@ object in `js/audio.js` and list its name in `AudioSystem.availableStyles`.
 ## How to customise colours
 
 The background palette lives in `js/config.js` under
-`backgroundGradientColors` — it's a simple array of hex colours:
+`backgroundGradientColors`. It's a simple array of hex colours:
 
 ```js
 backgroundGradientColors: [
@@ -74,13 +74,13 @@ backgroundGradientColors: [
 ],
 ```
 
-Add, remove or swap any of these hex values for your own palette — the
+Add, remove or swap any of these hex values for your own palette. The
 animation automatically works with however many colours you provide.
 `backgroundAnimationDurationSec` controls how slowly the gradient drifts
 (bigger number = slower, calmer).
 
 Bubble colouring (the rainbow sheen) is procedural rather than a fixed
-palette — see the `--bubble-hue` custom property in `css/styles.css`
+palette. See the `--bubble-hue` custom property in `css/styles.css`
 if you want to restrict or shift the rainbow's hue range.
 
 ---
@@ -89,7 +89,7 @@ if you want to restrict or shift the rainbow's hue range.
 
 - **Movement math** (wobble, drift, rising speed) lives in
   `js/animation.js` inside `updateBubble()`. The *ranges* it pulls from
-  are in `config.js` (see the table above) — prefer tuning those first.
+  are in `config.js` (see the table above); prefer tuning those first.
 - **Pop/burst animation** timing and easing live in `css/styles.css`
   under the `bubble-compress-fade` and `shimmer-burst` `@keyframes`
   blocks.
@@ -104,7 +104,7 @@ if you want to restrict or shift the rainbow's hue range.
 The panel's *options* (Gentle/Playful/Busy, Dreamy/Breezy/Quick, etc.)
 are built in `js/controls.js` inside `buildPanelMarkup()`. If you add a
 new preset to `config.js` (say, a fourth speed option), add a matching
-button in that function so it appears in the UI — presets in config.js
+button in that function so it appears in the UI. Presets in config.js
 are intentionally not auto-generated into buttons, so labels stay
 human-friendly and deliberate.
 
@@ -127,7 +127,7 @@ so embedding it is straightforward:
 </iframe>
 ```
 
-**Inside an existing page**, give the container a sized wrapper — the
+**Inside an existing page**, give the container a sized wrapper. The
 `.bubble-container` element fills 100% of its parent's width/height, so
 just make sure whatever wraps it has an explicit size:
 ```html
@@ -139,7 +139,7 @@ just make sure whatever wraps it has an explicit size:
 **Inside a draggable/resizable window** (e.g. a portfolio site widget):
 since the app only ever reads its container's *current* size each frame
 (via `getBoundingClientRect()`), resizing the container on the fly works
-with no extra code — bubbles will simply start respecting the new
+with no extra code. Bubbles will simply start respecting the new
 dimensions for their next movement update.
 
 
