@@ -11,7 +11,7 @@ No goals, high scores, timers, or levels.
 
 ## How to customise bubble behaviour
 
-Almost everything is controlled from **`js/config.js`** — open it and
+Almost everything is controlled from **`js/config.js`**. Open it and
 look for the section you want to change:
 
 | I want to...                                   | Edit this in `config.js`                     |
