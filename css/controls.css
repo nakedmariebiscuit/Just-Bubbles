@@ -1,0 +1,205 @@
+/**
+ * ============================================================================
+ * CONTROLS.CSS
+ * ============================================================================
+ * WHAT THIS FILE DOES:
+ * Styles the small expandable controls panel (frequency/speed/size/sound/
+ * pause/clear) built by js/controls.js.
+ *
+ * WHY IT EXISTS:
+ * Separated from styles.css so the "toy" (bubbles + background) and the
+ * "chrome" (UI controls) can be restyled independently -- see the note
+ * at the top of styles.css.
+ *
+ * DESIGN NOTES:
+ * The panel stays minimal and slightly translucent so it never competes
+ * visually with the bubbles, per the brief's "clean and minimal, bubbles
+ * remain the focus" requirement. It lives bottom-right, starts collapsed
+ * as a small pill, and expands upward.
+ * ============================================================================
+ */
+
+.controls-wrapper {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------------
+ * TOGGLE BUTTON (the collapsed "pill")
+ * ------------------------------------------------------------------- */
+.controls-toggle {
+  order: 2; /* sits below the panel visually since the panel expands upward */
+  margin-top: 10px;
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: rgba(255, 250, 245, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #6b4a45;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(150, 100, 90, 0.15);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.controls-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(150, 100, 90, 0.2);
+}
+
+.controls-toggle:focus-visible,
+.controls-btn:focus-visible,
+.controls-panel input:focus-visible {
+  outline: 3px solid #c98a86;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+ * PANEL
+ * ------------------------------------------------------------------- */
+.controls-panel {
+  order: 1;
+  width: 240px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 250, 245, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(150, 100, 90, 0.18);
+
+  transition: max-height 280ms ease, opacity 220ms ease, transform 220ms ease;
+}
+
+.controls-panel.is-expanded {
+  max-height: 640px;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  padding: 18px;
+}
+
+.controls-section {
+  margin-bottom: 16px;
+}
+
+.controls-section:last-child {
+  margin-bottom: 0;
+}
+
+.controls-heading {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #a1746e;
+}
+
+/* ---------------------------------------------------------------------
+ * BUTTON ROWS (frequency / speed / size / sound style presets)
+ * ------------------------------------------------------------------- */
+.controls-button-row {
+  display: flex;
+  gap: 6px;
+}
+
+.controls-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1px solid rgba(161, 116, 110, 0.25);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  color: #6b4a45;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, transform 100ms ease;
+}
+
+.controls-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.controls-btn:active {
+  transform: scale(0.97);
+}
+
+.controls-btn.is-active {
+  background: #e79b8e;
+  border-color: #e79b8e;
+  color: #fff8f2;
+}
+
+/* ---------------------------------------------------------------------
+ * ROWS (checkboxes / sliders)
+ * ------------------------------------------------------------------- */
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.controls-row:last-child {
+  margin-bottom: 0;
+}
+
+.controls-checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #e79b8e;
+  cursor: pointer;
+}
+
+.controls-row input[type="range"] {
+  flex: 1;
+  accent-color: #e79b8e;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------------
+ * PAUSE / CLEAR ACTIONS
+ * ------------------------------------------------------------------- */
+.controls-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.controls-btn-wide {
+  flex: 1;
+  padding: 10px 4px;
+  border-radius: 14px;
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------------
+ * RESPONSIVE
+ * ------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .controls-wrapper {
+    right: 12px;
+    bottom: 12px;
+  }
+  .controls-panel {
+    width: min(78vw, 240px);
+  }
+}

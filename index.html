@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Just Bubbles</title>
+  <meta name="description" content="A tiny digital toy for popping soap bubbles. No goals, no scores -- just bubbles.">
+
+  <!-- Google Fonts: Comfortaa for the whimsical display moments (title,
+       intro message), Nunito Sans for the controls panel where clarity
+       matters more than character. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/controls.css">
+</head>
+<body>
+
+  <!--
+    #bubble-container is the entire "world" bubbles live in. It is
+    intentionally NOT sized against the viewport in CSS -- see
+    css/styles.css -- so this app can be dropped into an iframe or a
+    resizable portfolio window and it will simply fill whatever box it's
+    given.
+  -->
+  <main id="bubble-container" class="bubble-container" aria-label="Bubble popping area">
+
+    <!-- One-time introductory message. Dismissed on first pop. -->
+    <div id="intro-message" class="intro-message" role="status">
+      <p class="intro-line">Click a bubble to pop it.</p>
+      <p class="intro-line">Drag across them to pop a whole bunch.</p>
+      <p class="intro-line intro-line-final">No high scores. Just bubbles.</p>
+    </div>
+
+  </main>
+
+  <!--
+    Script load order matters here since there is no bundler: config and
+    utils must load first (everything else depends on them), the
+    subsystem modules load next, and app.js -- which wires everything
+    together -- loads last.
+  -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/bubbles.js"></script>
+  <script src="js/animation.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

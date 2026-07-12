@@ -1,0 +1,330 @@
+/**
+ * ============================================================================
+ * STYLES.CSS
+ * ============================================================================
+ * WHAT THIS FILE DOES:
+ * All core visual styling for Just Bubbles: the animated pastel
+ * background, the bubble container, the bubbles themselves (translucent
+ * body + rainbow sheen + glossy highlight), the pop/burst animation, and
+ * the intro message.
+ *
+ * WHY IT EXISTS:
+ * Kept separate from controls.css so the "toy" itself and the "UI
+ * chrome" can be restyled independently -- e.g. you could swap in a
+ * completely different bubble look without touching the controls panel
+ * at all.
+ *
+ * DESIGN TOKENS (see README "How to customise colours" for more):
+ *   Palette   : warm pastel gradient -- blush pink, peach, pale coral,
+ *               apricot-cream, warm cream (values live in js/config.js
+ *               and are injected as the --bg-gradient custom property).
+ *   Display font : 'Comfortaa' -- soft, rounded, a little whimsical.
+ *   Body font    : 'Nunito Sans' -- warm but highly legible, used in the
+ *               controls panel where clarity matters most.
+ *   Ink        : #6b4a45 (a warm mauve-brown) is the base text colour,
+ *               chosen to sit comfortably on the pastel background
+ *               without the harshness of pure black.
+ * ============================================================================
+ */
+
+/* ---------------------------------------------------------------------
+ * RESET & BASE
+ * ------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  /* Deliberately NOT forcing height:100vh here -- the app must work
+     inside an arbitrary-sized container (iframe, portfolio window,
+     etc.) per the brief, so sizing is left to whatever page embeds it.
+     For a standalone page, we still want it to comfortably fill the
+     browser window, so we set height on html/body only -- the
+     .bubble-container itself uses 100% so it inherits whatever space
+     its parent gives it. */
+  height: 100%;
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  color: #6b4a45;
+}
+
+/* ---------------------------------------------------------------------
+ * BUBBLE CONTAINER + ANIMATED BACKGROUND
+ * ------------------------------------------------------------------- */
+.bubble-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px; /* sensible floor so it never collapses to nothing
+                         if a parent forgets to give it explicit height */
+  overflow: hidden;
+  cursor: pointer;
+
+  /* The gradient itself is injected as a CSS custom property by app.js
+     (built from CONFIG.backgroundGradientColors), so the palette is
+     fully data-driven from config.js. background-size is oversized and
+     the position is animated to create the slow, soft drifting effect
+     the brief asks for. */
+  background-image: var(--bg-gradient, linear-gradient(120deg, #fbe0dd, #fde3cf, #f8c3b0, #fbead9, #fff8ef));
+  background-size: 400% 400%;
+  animation: drift-background var(--bg-anim-duration, 28s) ease-in-out infinite;
+
+  /* Prevents accidental text selection while dragging across bubbles. */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+@keyframes drift-background {
+  0%   { background-position: 0% 40%; }
+  25%  { background-position: 50% 80%; }
+  50%  { background-position: 100% 40%; }
+  75%  { background-position: 50% 0%; }
+  100% { background-position: 0% 40%; }
+}
+
+/* Respect users who've asked for reduced motion: freeze the background
+   drift and the bubble wobble amplitude reads from config still apply
+   physics, but we can at least stop this large decorative animation. */
+@media (prefers-reduced-motion: reduce) {
+  .bubble-container {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+ * BUBBLES
+ * ------------------------------------------------------------------- */
+/*
+  Each bubble is a single .bubble div positioned with a JS-driven
+  transform (see js/animation.js). Its look is built from three layers:
+    1. The element's own background: a soft radial gradient giving the
+       glassy, translucent "soap film" base with a bright glossy
+       highlight near one edge.
+    2. ::before -- a low-opacity rainbow "sheen" built from a conic
+       gradient, rotated per-bubble via the --bubble-hue custom
+       property, blended with `color-dodge` so it reads as a light
+       iridescent reflection rather than a solid rainbow sticker.
+    3. ::after -- a soft outer rim-light (a subtle box-shadow lives on
+       the element itself) that keeps the bubble's edge visible against
+       both light and slightly darker parts of the background.
+
+  Per-bubble randomised values (size, hue, highlight position, opacity)
+  arrive as inline custom properties set by js/bubbles.js, so no two
+  bubbles use identical numbers even though they all share this one
+  set of CSS rules.
+*/
+.bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--bubble-size, 40px);
+  height: var(--bubble-size, 40px);
+  border-radius: 50%;
+  pointer-events: auto;
+  will-change: translate;
+
+  background:
+    radial-gradient(
+      circle at var(--highlight-x, 30%) var(--highlight-y, 25%),
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.55) 8%,
+      rgba(255, 255, 255, 0.12) 20%,
+      rgba(255, 255, 255, 0.04) 45%,
+      rgba(255, 255, 255, 0.16) 100%
+    );
+  opacity: var(--bubble-opacity, 0.7);
+
+  box-shadow:
+    inset 0 0 6px rgba(255, 255, 255, 0.5),
+    inset 0 0 18px rgba(255, 255, 255, 0.15),
+    0 2px 6px rgba(120, 80, 70, 0.12);
+
+  transition: opacity 120ms ease;
+}
+
+/* The rainbow iridescent sheen. Sits above the base gradient, rotated
+   per-bubble via --bubble-hue so every bubble's reflection looks
+   slightly different, exactly like real soap bubbles. */
+.bubble::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from calc(var(--bubble-hue, 0) * 1deg),
+    rgba(255, 170, 200, 0.35),
+    rgba(255, 220, 160, 0.30),
+    rgba(180, 240, 200, 0.30),
+    rgba(160, 210, 255, 0.35),
+    rgba(220, 180, 255, 0.30),
+    rgba(255, 170, 200, 0.35)
+  );
+  mix-blend-mode: color-dodge;
+  opacity: 0.55;
+}
+
+/* A tight, bright glint near the highlight point -- what makes a bubble
+   read as "wet glass" instead of a flat coloured circle. */
+.bubble::after {
+  content: '';
+  position: absolute;
+  width: 22%;
+  height: 22%;
+  top: calc(var(--highlight-y, 25%) - 8%);
+  left: calc(var(--highlight-x, 30%) - 8%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  filter: blur(1px);
+}
+
+/* ---------------------------------------------------------------------
+ * POP / BURST ANIMATION
+ * ------------------------------------------------------------------- */
+/*
+  When a bubble is popped, bubbles.js:
+    1. Adds the `.popping` class to the bubble itself, which triggers a
+       slight expansion as if the soap film's surface tension gives way,
+       fading out as it grows.
+    2. Creates a separate `.pop-burst` element (see createPopBurst() in
+       bubbles.js) positioned on top of the bubble -- a flash of soft
+       light "shards" that appears, blooms, and fades.
+
+  IMPORTANT -- why the burst is a SEPARATE element rather than a child
+  of the bubble: that was tried first, and didn't work. CSS `opacity`
+  multiplies down through nested elements, so a shimmer nested inside a
+  bubble that's simultaneously fading toward opacity 0 gets dragged down
+  with it -- right when it should be at its brightest, it was nearly
+  invisible. As an independent sibling element with its own opacity,
+  the burst is never diluted by the bubble's own fade.
+
+  Timing here should stay in sync with CONFIG.popAnimationDurationMs in
+  config.js (420ms) so the DOM removal timers and the visual animations
+  finish together.
+
+  Both animations below use the standalone `scale` CSS property, not
+  `transform`. Bubble *position* is driven every frame by JS via the
+  standalone `translate` property (see js/animation.js). Since `scale`
+  and `translate` are independent CSS properties, these animations can
+  freely animate size without ever touching -- or clobbering -- position.
+*/
+.bubble.popping {
+  animation: bubble-pop-expand 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes bubble-pop-expand {
+  0% {
+    scale: 1;
+    opacity: var(--bubble-opacity, 0.7);
+  }
+  40% {
+    scale: 1.2;
+    opacity: 0.75;
+  }
+  100% {
+    scale: 1.32;
+    opacity: 0;
+  }
+}
+
+/* The independent burst-of-light effect. Positioned by JS (see
+   createPopBurst in bubbles.js) directly over wherever the bubble was
+   when it popped, sized via --burst-size, then animates itself in and
+   out before being removed from the DOM. */
+.pop-burst {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--burst-size, 60px);
+  height: var(--burst-size, 60px);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 32% 32%, rgba(255, 255, 255, 0.98), transparent 42%),
+    radial-gradient(circle at 68% 60%, rgba(255, 200, 222, 0.85), transparent 48%),
+    radial-gradient(circle at 48% 78%, rgba(198, 228, 255, 0.85), transparent 48%);
+  animation: shimmer-burst 380ms ease-out 20ms forwards;
+}
+
+@keyframes shimmer-burst {
+  0% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  30% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1.7;
+  }
+}
+
+/* ---------------------------------------------------------------------
+ * INTRO MESSAGE
+ * ------------------------------------------------------------------- */
+.intro-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+
+  padding: 28px 36px;
+  max-width: min(90%, 420px);
+  text-align: center;
+
+  background: rgba(255, 250, 245, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 40px rgba(150, 100, 90, 0.15);
+
+  pointer-events: none; /* clicks pass through to any bubble underneath */
+  transition: opacity 450ms ease, transform 450ms ease;
+}
+
+.intro-message.is-hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+.intro-line {
+  margin: 0 0 10px 0;
+  font-family: 'Comfortaa', 'Nunito Sans', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.intro-line:last-child {
+  margin-bottom: 0;
+}
+
+.intro-line-final {
+  font-size: 15px;
+  font-weight: 400;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------------
+ * RESPONSIVE ADJUSTMENTS
+ * ------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .intro-message {
+    padding: 20px 24px;
+    border-radius: 22px;
+  }
+  .intro-line {
+    font-size: 15px;
+  }
+  .intro-line-final {
+    font-size: 13px;
+  }
+}
