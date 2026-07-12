@@ -1,19 +1,17 @@
-# Just Bubbles 🫧
+# Just Bubbles 
 
-A tiny digital toy for popping soap bubbles.
+A simple digital toy for popping soap bubbles.
 
-No goals. No scores. No timers. No levels.
+No goals, high scores, timers, or levels.
 
-**No pressure. No productivity. Just bubbles.**
+**It's built to feel nostalgic and calming. A reminder that it's okay to enjoy something just because it's fun.**
 
 ---
 
 ## What this is
 
 Just Bubbles recreates one of the simplest childhood pleasures: bubbles
-drift gently across the screen, and you pop them. That's it. It's built
-to feel nostalgic, calming and a little whimsical — a reminder that it's
-okay to enjoy something purely because it's fun.
+drift gently across the screen, and you pop them. That's it. 
 
 ## Project goals
 
@@ -22,56 +20,6 @@ okay to enjoy something purely because it's fun.
 - Run instantly by opening `index.html`, no build step, no install.
 - Stay small, modular and easy to read, so it's easy to customise or
   extend.
-
----
-
-## Folder structure
-
-```
-just-bubbles/
-├── index.html            The single HTML page — open this to run the app
-├── css/
-│   ├── styles.css        Background, bubbles, pop animation, intro message
-│   └── controls.css      The expandable controls panel
-├── js/
-│   ├── config.js         Every tunable value lives here — start here first
-│   ├── utils.js          Small shared helper functions (random numbers, etc.)
-│   ├── audio.js          Synthesised pop sounds (Web Audio API)
-│   ├── bubbles.js        Creating, popping and managing bubble DOM elements
-│   ├── animation.js       The per-frame movement loop (rAF)
-│   ├── controls.js       Builds and wires up the controls panel
-│   └── app.js            Wires every module together (the entry point)
-├── assets/
-│   ├── audio/            Empty by default — see "How to replace sound effects"
-│   ├── icons/            Empty — reserved for future UI icons
-│   └── images/           Empty — reserved for future visual assets
-└── README.md             You are here
-```
-
-Each JS file is heavily commented with a "what it does / why it exists /
-how it works / what you can customise" header, so if you're new to the
-code, start by reading those comment blocks top to bottom.
-
----
-
-## How to run locally
-
-There's no build step and no dependencies to install. Just open the file:
-
-1. Download or clone this folder.
-2. Double-click `index.html` (or right-click → Open With → your browser).
-
-That's it — the app runs entirely client-side.
-
-If your browser blocks local file access to fonts/scripts (some do, for
-security reasons), serve the folder with any simple static server
-instead, for example:
-
-```bash
-# From inside the just-bubbles folder:
-python3 -m http.server 8080
-# then open http://localhost:8080 in your browser
-```
 
 ---
 
@@ -208,60 +156,5 @@ since the app only ever reads its container's *current* size each frame
 with no extra code — bubbles will simply start respecting the new
 dimensions for their next movement update.
 
----
-
-## How to prepare the project for GitHub
-
-The project is already GitHub-safe: relative paths throughout, no
-build step, no environment variables, no server required.
-
-1. Initialise a repo in this folder:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Just Bubbles"
-   ```
-2. (Optional) Enable GitHub Pages on the repo, pointing at the root of
-   the `main` branch — since `index.html` sits at the project root,
-   it'll be served automatically at `https://<username>.github.io/<repo>/`.
-3. `assets/icons/` and `assets/images/` include `.gitkeep` placeholder
-   files so the empty folders are preserved in git (git doesn't track
-   empty directories by default) — delete those once you add real files.
-
----
-
-## Browser support
-
-Tested against evergreen desktop browsers: Chrome, Edge, Firefox, and
-Safari. This is a desktop-first experience; mobile layout optimisation
-isn't a design goal, though touch/tap/drag interactions do work via
-Pointer Events.
-
-## Accessibility
-
-- The controls panel toggle and buttons are all real `<button>` elements,
-  reachable and operable via keyboard.
-- Visible focus outlines are provided for the panel's toggle, buttons
-  and inputs (`:focus-visible` in `controls.css`).
-- ARIA labels/roles are used on the button groups, the bubble area, and
-  the pause button's pressed state.
-- `prefers-reduced-motion` is respected for the large decorative
-  background animation.
-
-## Future features (not yet implemented)
-
-The codebase is structured so these can be added without a rewrite —
-see the "FUTURE FEATURES HOOK" comment near the bottom of `js/bubbles.js`
-for the intended extension point:
-
-- Golden bubbles / rainbow bubbles
-- Bubble clusters
-- Giant bubbles
-- Bubbles that split into smaller bubbles when popped
-- Rainbow trails
-- Sparkle effects
-- Seasonal themes
-
----
 
 Enjoy the bubbles. 🫧
