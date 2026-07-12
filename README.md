@@ -143,4 +143,4 @@ with no extra code — bubbles will simply start respecting the new
 dimensions for their next movement update.
 
 
-Enjoy the bubbles. 🫧
+Enjoy the bubbles!
