@@ -6,20 +6,6 @@ No goals, high scores, timers, or levels.
 
 **It's built to feel nostalgic and calming. A reminder that it's okay to enjoy something just because it's fun.**
 
----
-
-## What this is
-
-Just Bubbles recreates one of the simplest childhood pleasures: bubbles
-drift gently across the screen, and you pop them. That's it. 
-
-## Project goals
-
-- Feel **nostalgic, relaxing, playful, satisfying, polished**.
-- Zero objectives of any kind — nothing to win, lose, or track.
-- Run instantly by opening `index.html`, no build step, no install.
-- Stay small, modular and easy to read, so it's easy to customise or
-  extend.
 
 ---
 
